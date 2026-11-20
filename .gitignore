@@ -1,0 +1,4 @@
+world/
+log.csv
+__pycache__/
+*.pyc
