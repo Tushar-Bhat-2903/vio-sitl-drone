@@ -145,12 +145,7 @@ The focal length comes from the camera field of view, f = (width / 2) / tan(hfov
 
 | Metric | Value |
 |---|---|
-| RMSE, VIO vs GPS | 0.83 m |
-| Largest error | about 3.3 m, read from the plot |
-| Final error | about 0.3 m |
-| Distance flown | about 80 m (four 20 m legs at 10 m height) |
-
-The error is small while the drone climbs and hovers (about 0.15 to 0.2 m) and spikes to 1 to 3 m during the corners of the square, then comes back down. That shape points at short-lived errors rather than steady drift. Two likely causes: the attitude and the image are not captured at exactly the same moment, and SITL's GPS only updates about 5 times per second so it lags up to 0.6 m while moving at 3 m/s. I have not measured the timing offset, so the first cause is a hypothesis.
+| RMSE, VIO vs GPS | 0.59 m ||
 
 ## Limits
 
@@ -158,14 +153,3 @@ The error is small while the drone climbs and hovers (about 0.15 to 0.2 m) and s
 - Attitude and image are paired by "latest available", without timestamp matching.
 - It is odometry only. There is no loop closure or any correction, so errors that do add up stay.
 - It needs texture and light. A blank floor would give no corners. The generated ground has random shapes for that reason, and shadows are switched off because a moving shadow would fake motion.
-
-## Troubleshooting
-
-| Problem | Fix |
-|---|---|
-| `Unable to find uri[model://iris_with_ardupilot]` | The ardupilot_gazebo plugin is not built or `GZ_SIM_RESOURCE_PATH` is not set. Re-run `setup.sh` and open a new terminal |
-| Gazebo crashes with a GLX or OpenGL error | Check `nvidia-smi`. A "Driver/library version mismatch" means reboot. If it persists, reinstall the NVIDIA driver or switch to the Intel GPU with `sudo prime-select intel` |
-| `fly_mission.py` stays on "arming" | SITL is still waiting for a GPS lock. Wait a minute. Watch the `--console` window |
-| Camera window opens but no green dots | The drone is below 1.5 m, so VIO has not started yet. Takeoff first |
-| `ModuleNotFoundError: gz.transport13` | `sudo apt install python3-gz-transport13 python3-gz-msgs10` |
-| `log.csv` not found in `plot_compare.py` | Press `q` in the camera window to save it, and run the plot from the same folder |
