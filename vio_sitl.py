@@ -1,4 +1,5 @@
 # task 3: read the iris camera from gazebo, attitude/altitude/GPS from ardupilot, run VIO and log it
+# the VIO position is also sent back to ardupilot, which flies with it instead of GPS (vio.parm)
 import csv
 import time
 import numpy as np
@@ -21,13 +22,14 @@ for msg_id, hz in [(mavutil.mavlink.MAVLINK_MSG_ID_ATTITUDE, 30),
                               msg_id, 1e6 / hz, 0, 0, 0, 0, 0)
 
 attitude = None
+angles = (0.0, 0.0, 0.0)   # roll, pitch, yaw in radians
 altitude = 0.0
 home = None
 gps = np.zeros(2)       # GPS position as north, east in metres from the first fix
 
 
 def read_mavlink():
-    global attitude, altitude, home, gps
+    global attitude, angles, altitude, home, gps
     while True:
         msg = mav.recv_match(blocking=False)
         if msg is None:
@@ -35,6 +37,7 @@ def read_mavlink():
         kind = msg.get_type()
         if kind == 'ATTITUDE':
             attitude = rotation(msg.roll, msg.pitch, msg.yaw)
+            angles = (msg.roll, msg.pitch, msg.yaw)
         elif kind == 'GLOBAL_POSITION_INT':
             altitude = msg.relative_alt / 1000
         elif kind == 'GPS_RAW_INT' and msg.fix_type >= 3:
@@ -78,8 +81,7 @@ while True:
     # only run VIO in the air, on the ground the camera sees almost nothing
     if attitude is not None and home is not None and altitude > 1.5:
         if vio is None:
-            vio = VIO(msg.width, msg.height, HFOV)
-            vio.pos = gps.copy()      # start from the same point as GPS
+            vio = VIO(msg.width, msg.height, HFOV)   # starts at 0, 0 = the take-off point
         points = vio.update(gray, attitude, altitude)
         for x, y in points:
             cv2.circle(view, (int(x), int(y)), 3, (0, 255, 0), -1)
@@ -87,6 +89,10 @@ while True:
         text = 'VIO N %.1f E %.1f   GPS N %.1f E %.1f   alt %.1f' % (
             vio.pos[0], vio.pos[1], gps[0], gps[1], altitude)
         cv2.putText(view, text, (10, 25), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 255, 255), 2)
+
+    # tell ardupilot where we are (north, east, down). on the ground it is just 0, 0
+    north, east = vio.pos if vio is not None else (0.0, 0.0)
+    mav.mav.vision_position_estimate_send(int(time.time() * 1e6), north, east, -altitude, *angles)
 
     cv2.imshow('iris camera', view)
     if cv2.waitKey(1) == ord('q'):

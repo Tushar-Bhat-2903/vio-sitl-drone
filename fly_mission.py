@@ -22,7 +22,7 @@ def set_rate(msg_id, hz):
 set_rate(mavutil.mavlink.MAVLINK_MSG_ID_GLOBAL_POSITION_INT, 10)
 set_rate(mavutil.mavlink.MAVLINK_MSG_ID_LOCAL_POSITION_NED, 10)
 
-mav.param_set_send('WPNAV_SPEED', 300)      # fly at 3 m/s
+mav.param_set_send('WPNAV_SPEED', 150)      # fly at 1.5 m/s (slower = vio drifts less)
 mav.param_set_send('WP_YAW_BEHAVIOR', 0)    # keep the nose pointing the same way
 
 mav.set_mode(mav.mode_mapping()['GUIDED'])

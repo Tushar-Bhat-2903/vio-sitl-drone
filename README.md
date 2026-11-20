@@ -81,6 +81,15 @@ sim_vehicle.py -v ArduCopter -f gazebo-iris --model JSON --console --out 127.0.0
 
 The `--out` option adds a second MAVLink stream on port 14551 so the VIO program and the flight script do not fight over the same port.
 
+For the VIO flight (task 3) start SITL with the extra parameter file instead. It tells ArduPilot to take its position from VIO and not from GPS:
+
+```bash
+cd ~/ardupilot
+sim_vehicle.py -v ArduCopter -f gazebo-iris --model JSON --console --out 127.0.0.1:14551 --add-param-file=$HOME/Downloads/vio_sitl/vio.parm
+```
+
+Use the plain command for task 2.
+
 ### Task 2: takeoff and landing
 
 Terminal 3:
@@ -92,9 +101,11 @@ python3 fly_mission.py
 
 The drone arms, climbs to 10 m, hovers for 5 seconds and lands. Use `--alt 15` for another height.
 
-### Task 3: VIO while flying the square
+### Task 3: flying the square on VIO
 
-Terminal 3, start the VIO program first and wait for the `iris camera` window to open:
+Start SITL with `vio.parm` (see above). The drone now navigates on the VIO position. GPS is only logged for the comparison.
+
+Terminal 3, start the VIO program first and wait for the `iris camera` window to open. Then wait about 40 seconds so the EKF settles on the VIO position before sending the flight script:
 
 ```bash
 cd ~/Downloads/vio_sitl
