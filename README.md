@@ -12,8 +12,8 @@ Left to right: top view of both paths, north and east against time, and the dist
 
 | Task | Link |
 |---|---|
-| 1. Takeoff and landing |(https://drive.google.com/file/d/13pYd_9B3QAZiIeQfyG02QTDcNRfVFqeX/view)|
-| 2. Camera VIO while flying the square |(https://drive.google.com/file/d/17YG8Qb2CK7NwdHkgiRnGHTyuaUI4xIiN/view?usp=sharing)|
+| 1. Takeoff and landing |https://drive.google.com/file/d/13pYd_9B3QAZiIeQfyG02QTDcNRfVFqeX/view|
+| 2. Camera VIO while flying the square |https://drive.google.com/file/d/17YG8Qb2CK7NwdHkgiRnGHTyuaUI4xIiN/view?usp=sharing|
 
 ## What is in the repo
 
