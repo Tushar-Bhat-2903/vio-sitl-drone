@@ -2,13 +2,13 @@
 
 A simulated Iris quadcopter flies a 20 m square at 10 m height in Gazebo Harmonic. A downward camera under the drone feeds a small visual odometry program written in Python. The VIO position is then compared with the drone's GPS position. 
 
-Result from one run: the VIO track stays within 0.83 m RMSE of GPS over about 80 m of flight.
+Result from one run: the VIO track stays within 0.59 m RMSE of GPS over about 80 m of flight.
 
 ![VIO vs GPS](vio_vs_gps.png)
 
 Left to right: top view of both paths, north and east against time, and the distance between VIO and GPS over time.
 
-## Demo videos and report
+## Videos
 
 | Task | Link |
 |---|---|
