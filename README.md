@@ -1,6 +1,6 @@
 # Visual inertial odometry on an ArduPilot SITL drone in Gazebo
 
-A simulated Iris quadcopter flies a 20 m square at 10 m height in Gazebo Harmonic. A downward camera under the drone feeds a small visual odometry program written in Python. The VIO position is then compared with the drone's GPS position. No ROS is used anywhere.
+A simulated Iris quadcopter flies a 20 m square at 10 m height in Gazebo Harmonic. A downward camera under the drone feeds a small visual odometry program written in Python. The VIO position is then compared with the drone's GPS position. 
 
 Result from one run: the VIO track stays within 0.83 m RMSE of GPS over about 80 m of flight.
 
@@ -14,7 +14,7 @@ Left to right: top view of both paths, north and east against time, and the dist
 |---|---|
 | 2. Takeoff and landing | add link |
 | 3. Camera VIO while flying the square | add link |
-| 4. Report (GPS vs VIO, results and proof) | add link |
+| 4. Report | add link |
 
 ## What is in the repo
 
