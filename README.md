@@ -90,8 +90,6 @@ cd ~/Downloads/vio_sitl
 python3 fly_mission.py --square 20
 ```
 
-In the camera window, green dots are the tracked corners and the yellow text shows VIO and GPS north/east in metres.
-
 ### Task 4: GPS vs VIO comparison
 
 ```bash
@@ -100,21 +98,14 @@ python3 plot_compare.py
 ```
 ## How the VIO works
 
-The camera looks straight down. Height comes from ArduPilot and roll, pitch and yaw come from ArduPilot's attitude estimate (the IMU part). For each new frame:
+The camera points straight down at the ground. ArduPilot tells the program the drone's height and its tilt (roll, pitch and yaw). The tilt comes from the motion sensor, which is the "inertial" part. For every new camera picture, the program does this:
 
-1. Find up to 200 corners in the previous frame and track them into the new frame. 
-2. For each corner, turn the pixel into a ray with the camera focal length, rotate the ray by the drone's attitude, and find where it hits the flat ground. Do this for the old pixel (old attitude and height) and the new pixel (new attitude and height).
-3. Its move is the median of (old ground offset minus new ground offset) over all corners. Add it to the position.
+1. **Find and follow corners.** It picks up to 200 sharp corners in the previous picture and finds where each one went in the new picture.
+2. **Put the corners on the ground.** For each corner it works out where on the flat ground that pixel is looking. It does this once for the old picture, using the old tilt and height, and once for the new picture, using the new tilt and height. Using the tilt stops a leaning drone from being mistaken for a moving one.
+3. **Measure the move.** A real spot on the ground does not move, so if its ground position changed between the pictures, the drone must have moved. The program takes the old ground position minus the new one for every corner, and uses the middle value (the median) so a few badly tracked corners are ignored. Then it adds that move to the running position.
 
 ## Results
 
 | Metric | Value |
 |---|---|
 | RMSE, VIO vs GPS | 0.59 m ||
-
-## Limits
-
-- The ground is assumed flat and the height is trusted. On real terrain the scale would be wrong.
-- Attitude and image are paired by "latest available", without timestamp matching.
-- It is odometry only. There is no loop closure or any correction, so errors that do add up stay.
-- It needs texture and light. A blank floor would give no corners. The generated ground has random shapes for that reason, and shadows are switched off because a moving shadow would fake motion.
