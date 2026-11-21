@@ -108,4 +108,4 @@ The camera points straight down at the ground. ArduPilot tells the program the d
 
 | Metric | Value |
 |---|---|
-| RMSE, VIO vs GPS | 0.59 m ||
+| RMSE, VIO vs GPS | 0.56 m ||
